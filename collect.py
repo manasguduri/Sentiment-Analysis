@@ -31,7 +31,7 @@ from urllib.request import urlopen
 from collections import Counter, defaultdict
 
 
-twitter = TwitterAPI('z7xYdZYNEy7Z72q78QuDLkDNM','aKcJel8zmuwqMD5VIqySHzTWcisPzVbecB4jzoLhKdSep7xqcu','773160517036834817-uUtEJgqfe66GanWSryb5sCphm3aSIXq','FpxQrtVE5fbedOtkRW36JJOqiXGCvkH9sMuntWH0l3NPj')
+twitter = TwitterAPI(consumer_key, consumer_secret, access_token, access_token_secret)
 
 twittertweets = []
 
