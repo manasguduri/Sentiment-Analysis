@@ -43,7 +43,8 @@ def read_tweets(filename):
                 pass
     return tweet_t,user_n
 tweet_test, user_name = read_tweets('twitter_data.csv')
-#print(tweet_test)
+
+
 def tokenize(text):
     tokens = re.findall(r"\w+|\S", text.lower(),flags = re.L)
     tokens1 = []
@@ -68,6 +69,7 @@ for line in afinn_file:
     if len(parts) == 2:
         afinn[parts[0].decode("utf-8")] = int(parts[1])
 
+        
 def afinn_sentiment2(terms, afinn, verbose=False):
     pos = 0
     neg = 0
@@ -80,6 +82,7 @@ def afinn_sentiment2(terms, afinn, verbose=False):
             else:
                 neg += -1 * afinn[t]
     return pos, neg
+
 
 #manually labelling the data
 positives = []
@@ -101,13 +104,11 @@ for token_list, tweet in zip(tokens, tweet_test):
 for tweet, pos, neg in sorted(positives, key=lambda x: x[1], reverse=True):
     neutral.append((-1, tweet))
 
-
 for tweet, pos, neg in sorted(negatives, key=lambda x: x[1], reverse=True):
     neutral.append(('1', tweet))
 
 for tweet, pos, neg in sorted(all1, key=lambda x: x[1], reverse=True):
     neutral.append(('0', tweet))
-
 
 with open('neutral.csv', 'w') as fp1:
     filewriter = csv.writer(fp1)
@@ -127,7 +128,6 @@ def read_training_data(filename):
     return labeled_tweets,np.array(labels1)
 
 labeled_tweets,labels = read_training_data('neutral.csv')
-
 
 
 def do_vectorize(tokenizer_fn=tokenize, min_df=1,
@@ -170,6 +170,7 @@ def get_clf(C = 1.,penalty = 'l2'):
     return LogisticRegression(C = C,penalty=penalty,random_state=42)
 clf_logistic = get_clf()
 
+
 def do_cross_validation(X, y,clf,n_folds):
     cv = KFold(len(y),n_folds)
     print(y)
@@ -185,6 +186,7 @@ def do_cross_validation(X, y,clf,n_folds):
 logistic_regression_accuracy = (do_cross_validation(X, y,clf_logistic, 5))*100
 print('Average cross validation accuracy for Logistic Regression=%.1f percentage' % (logistic_regression_accuracy))
 
+
 def prediction(CLF,trained_CSR,trained_label,untrained_tweets_CSR):
     CLF.fit(trained_CSR,trained_label)
     predicted = CLF.predict(untrained_tweets_CSR)
@@ -193,10 +195,9 @@ def prediction(CLF,trained_CSR,trained_label,untrained_tweets_CSR):
 vec = do_vectorize()
 X = vec.fit_transform(x for x in twittertweets)
 test_tweet_vector = vec.transform(t for t in tweet_test)
-
 Tweet_predicted_logistic =prediction(clf_logistic,X,y,test_tweet_vector)
-
 logitic_pred_dict = dict(Counter(Tweet_predicted_logistic))
+
 
 def print_results(dictionary):
     for i in dictionary:
@@ -211,6 +212,7 @@ def print_results(dictionary):
 
 print("Logistic Regression Results")
 print_results(logitic_pred_dict)
+
 
 def percentage_tweets(dictionary):
     sumt = sum(dictionary.values())
@@ -242,6 +244,8 @@ def print_results_percentage(dictionary):
 
 print("Logistic Regression Percentage")
 print_results_percentage(logistic_precentage)
+
+#graph
 
 def print_graph(title,dictionary):
     a = dictionary.keys()
